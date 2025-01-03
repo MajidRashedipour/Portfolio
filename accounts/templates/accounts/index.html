@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block 'title' %}
+    {{ user.get_full_name }}
+{% endblock %}
+
+{% block 'content' %}
+    <div class="notif">
+        {% if success %}
+            <p class="success-message active">{{ success }}</p>
+        {% endif %}
+        {% if errors %}
+            {% for error in errors %}
+                <p class="error-message active">{{ error }} is Required!</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <nav>
+        <ul>
+            <li class="indicator"></li>
+            <li class="home-btn active"></li>
+            <li class="resume-btn"></li>
+            <li class="message-btn"></li>
+        </ul>
+    </nav>
+    <main>
+        <!-- Home Section -->
+        <section class="home active">
+            <div class="head-box">
+                <div class="image-box">
+                    <img src={{ user.avatar.url }} alt="Majid Rashedipour">
+                </div>
+                <div class="stack-box">
+                    <h1>{{ user.get_full_name }}</h1>
+                    <h4>{{ user.stack }}</h4>
+                </div>
+            </div>
+            <div class="personal-info">
+                <div>
+                    <div><strong>Education</strong></div>
+                    <div>{{ user.education }}</div>
+                </div>
+                <div>
+                    <div><strong>Phone</strong></div>
+                    <div>{{ user.phone_number }}</div>
+                </div>
+                <div>
+                    <div><strong>Email</strong></div>
+                    <div>{{ user.email }}</div>
+                </div>
+                <div>
+                    <div><strong>Birth Date</strong></div>
+                    <div>{{ user.birth_date }}</div>
+                </div>
+                <div>
+                    <div><strong>Language</strong></div>
+                    <div>{{ user.language }}</div>
+                </div>
+                <div>
+                    <div><strong>Address</strong></div>
+                    <div>{{ user.address }}</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resume Section -->
+        <section class="resume">
+            <div class="about-me">
+                <strong>About me</strong>
+                {% if user.about_me %}
+                    <div>
+                        <p>{{ user.about_me }}</p>
+                    </div>
+                {% else %}
+                    <p class="not-item">text not found</p>
+                {% endif %}
+            </div>
+            <div class="skills">
+                <strong>Skills</strong>
+                {% if user.skills.all %}
+                    {% for skill in user.skills.all %}
+                        <div>{{ skill.name }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p class="not-item">skill not found</p>
+                {% endif %}
+            </div>
+            <div class="projects">
+                <strong>Projects</strong>
+                {% if user.projects.all %}
+                    {% for project in user.projects.all %}
+                        <div>
+                            <strong>{{ project.title }}</strong>
+                            <div class="show-btn"><a href={{ project.link }}>Show</a></div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="not-item">project not found</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Message Section -->
+        <section class="contact-me">
+            <div class="page-title">
+                <strong>Contact Me</strong>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="full_name" placeholder="name..." required>
+                <input type="email" name="email" placeholder="email..." required>
+                <textarea rows="10" name="message" placeholder="text..." required></textarea>
+                <button type="submit">submit</button>
+            </form>
+            <hr>
+            <div class="social-box">
+                <div class="address">Address : {{ user.address }}</div>
+                <div class="phone">Phone Number : {{ user.phone_number }}</div>
+                <div class="email">Email Address : {{ user.email }}</div>
+                {% if user.socials.all %}
+                    <div class="social-medias">
+                        {% for social in user.socials.all%}
+                            <div><a href={{ social.link }}><img src={{ social.icon.url }} alt={{ social.name }}></a></div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="copyright">
+                <p>@2022-2025, Majid Rashedipour. All rights reserved.</p>
+            </div>
+        </section>
+    </main>
+{% endblock %}
